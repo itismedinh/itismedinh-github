@@ -1,3 +1,4 @@
+# Import các thư viện cần thiết 
 import paho.mqtt.client as mqtt
 from time import sleep
 from random import randint
@@ -39,14 +40,16 @@ def mqtt_publish(data):
 
     client.publish('post',json_data)
 
+# Tạo vòng lặp vô hạn để chương trình chạy liên tục
 while 1:
+    #  
     data = {
-    "temperature": 23.0,
-    "humidity": 5.0,
-    "led1": randint(0, 1),  
-    "led2": randint(0, 1),  
-    "led3": randint(0, 1),  
-    "device_name": "raspberry"
+        "temperature": 23.0,
+        "humidity": 5.0,
+        "led1": randint(0, 1),  
+        "led2": randint(0, 1),  
+        "led3": randint(0, 1),  
+        "device_name": "raspberry"
     }
     # data = 23.0
 
