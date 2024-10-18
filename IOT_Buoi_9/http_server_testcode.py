@@ -1,59 +1,126 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Form
 import uvicorn
-from pydantic import BaseModel
 from datetime import datetime
 from pymongo.mongo_client import MongoClient
-import json
-import urllib.parse
 
 app = FastAPI()
-
-myclient = MongoClient("mongodb+srv://1doahoacamtucau:123dinh789@iotbuoi8http.ou6yz.mongodb.net/?retryWrites=true&w=majority&appName=IotBuoi8Http")
-mydb = myclient['iot']
+myclient = MongoClient("mongodb+srv://1doahoacamtucau:123dinh789@chuyende-iot.ou6yz.mongodb.net/?retryWrites=true&w=majority&appName=ChuyenDe-IOT")
+mydb = myclient['Buoi_9_IOT']
 mycol = mydb['Muc_do_3']
 current_id = 0
 
-class DataClass(BaseModel):
-    id: int
-    temperature: float
-    humidity: float
-    led1: int
-    led2: int
-    led3: int
-    device_name: str
-    timestamp: str
-
-@app.post("/post")
-async def send_data(data: DataClass):
+@app.post("/post_all_json")
+async def send_data(data: dict):
     global current_id
     current_id += 1
     data_entry = {
         "id": current_id,
-        "temperature": data.temperature,
-        "humidity": data.humidity,
-        "led1": data.led1,
-        "led2": data.led2,
-        "led3": data.led3,
-        "device_name": data.device_name,
+        "temperature": data['temperature'],
+        "humidity": data['humidity'],
+        "led1": data['led1'],
+        "led2": data['led2'],
+        "led3": data['led3'],
+        "device_name": data['device_name'],
         "timestamp": str(datetime.now())
     }
-    # mycol.insert_one(data_entry)
+    mycol.insert_one(data_entry)
     print(f'Save to MongoDB: {data_entry}')
     return {"OK"}
 
-# @app.post("/post")
-# async def get_data(item: Item):
-#     my_dict = {
-#         "data1": item.data1,
-#         "data2": item.data2
-#     }
-#     print(my_dict)
-#     return {"OK"}
+@app.post("/post_all_url")
+async def send_data(
+    temperature: float = Form(...),
+    humidity: float = Form(...),
+    led1: int = Form(...),
+    led2: int = Form(...),
+    led3: int = Form(...),
+    device_name: str = Form(...)
+):
+    global current_id
+    current_id += 1
+    data_entry = {
+        "id": current_id,
+        "temperature": temperature,
+        "humidity": humidity,
+        "led1": led1,
+        "led2": led2,
+        "led3": led3,
+        "device_name": device_name,
+        "timestamp": str(datetime.now())
+    }
+    mycol.insert_one(data_entry)
+    print(f'Save to MongoDB: {data_entry}')
+    return {"OK"}
 
-# @app.get("/get")
-# async def get_data():
-#     all_data = mycol.find().sort("timestamp", -1)
-#     return {"all_data": list(all_data)}
+@app.post("/post_temp_json")
+async def send_data(data: dict):
+    global current_id
+    current_id += 1
+    data_entry = {
+        "id": current_id,
+        "temperature": data['temperature'],
+        "device_name": data['device_name'],
+        "timestamp": str(datetime.now())
+    }
+    mycol.insert_one(data_entry)
+    print(f'Save to MongoDB: {data_entry}')
+    return {"OK"}
+
+@app.post("/post_humi_json")
+async def send_data(data: dict):
+    global current_id
+    current_id += 1
+    data_entry = {
+        "id": current_id,
+        "humidity": data['humidity'],
+        "device_name": data['device_name'],
+        "timestamp": str(datetime.now())
+    }
+    mycol.insert_one(data_entry)
+    print(f'Save to MongoDB: {data_entry}')
+    return {"OK"}
+
+@app.post("/post_led1_json")
+async def send_data(data: dict):
+    global current_id
+    current_id += 1
+    data_entry = {
+        "id": current_id,
+        "led1": data['led1'],
+        "device_name": data['device_name'],
+        "timestamp": str(datetime.now())
+    }
+    mycol.insert_one(data_entry)
+    print(f'Save to MongoDB: {data_entry}')
+    return {"OK"}
+
+@app.post("/post_led2_json")
+async def send_data(data: dict):
+    global current_id
+    current_id += 1
+    data_entry = {
+        "id": current_id,
+        "led2": data['led2'],
+        "device_name": data['device_name'],
+        "timestamp": str(datetime.now())
+    }
+    mycol.insert_one(data_entry)
+    print(f'Save to MongoDB: {data_entry}')
+    return {"OK"}
+
+@app.post("/post_led3_json")
+async def send_data(data: dict):
+    global current_id
+    current_id += 1
+    data_entry = {
+        "id": current_id,
+        "led3": data['led3'],
+        "device_name": data['device_name'],
+        "timestamp": str(datetime.now())
+    }
+    mycol.insert_one(data_entry)
+    print(f'Save to MongoDB: {data_entry}')
+    return {"OK"}
 
 if __name__ == '__main__':
     uvicorn.run(app, host='0.0.0.0', port=8000)
