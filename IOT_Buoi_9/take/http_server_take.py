@@ -1,14 +1,17 @@
+# Import các thư viện cần thiết 
 from fastapi import FastAPI, Form
 import uvicorn
 from datetime import datetime
 from pymongo.mongo_client import MongoClient
 
+# Khởi tạo ứng dụng FastAPI và thực hiện kết nối tới MongoDB
 app = FastAPI()
 myclient = MongoClient("mongodb+srv://1doahoacamtucau:123dinh789@chuyende-iot.ou6yz.mongodb.net/?retryWrites=true&w=majority&appName=ChuyenDe-IOT")
 mydb = myclient['Buoi_9_IOT']
 mycol = mydb['Muc_do_3']
 current_id = 0
 
+# Định nghĩa endpoint HTTP POST để gửi dữ liệu dưới dạng json
 @app.post("/post_all_json")
 async def send_data(data: dict):
     global current_id
@@ -25,6 +28,7 @@ async def send_data(data: dict):
     print(f'Save to MongoDB: {data_entry}')
     return {"OK"}
 
+# Định nghĩa endpoint HTTP POST để gửi dữ liệu dưới dạng url
 @app.post("/post_all_url")
 async def send_data(
     temperature: float = Form(...),
@@ -47,4 +51,5 @@ async def send_data(
     return {"OK"}
 
 if __name__ == '__main__':
+    # Chạy ứng dụng FastAPI bằng unicorn
     uvicorn.run(app, host='0.0.0.0', port=8000)
