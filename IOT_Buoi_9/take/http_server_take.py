@@ -1,10 +1,10 @@
-# Import các thư viện cần thiết 
+# Import các thư viện cần thiết, để thực hiện theo yêu cầu đề bài
 from fastapi import FastAPI, Form
 import uvicorn
 from datetime import datetime
 from pymongo.mongo_client import MongoClient
 
-# Khởi tạo ứng dụng FastAPI và thực hiện kết nối tới MongoDB
+# Khởi tạo FastAPI và thực hiện kết nối tới MongoDB
 app = FastAPI()
 myclient = MongoClient("mongodb+srv://1doahoacamtucau:123dinh789@chuyende-iot.ou6yz.mongodb.net/?retryWrites=true&w=majority&appName=ChuyenDe-IOT")
 mydb = myclient['Buoi_9_IOT']
@@ -24,6 +24,7 @@ async def send_data(data: dict):
         "device_name": data['device_name'],
         "timestamp": str(datetime.now())
     }
+    # Ghi dữ liệu vào database, để lưu trữ dữ liệu lâu dài
     mycol.insert_one(data_entry)
     print(f'Save to MongoDB: {data_entry}')
     return {"OK"}
